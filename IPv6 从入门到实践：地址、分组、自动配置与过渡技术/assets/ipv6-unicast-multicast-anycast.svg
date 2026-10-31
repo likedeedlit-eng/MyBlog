@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+  <title id="title">IPv6 三种传递方式：单播、组播与任播</title>
+  <desc id="desc">三个并排面板对比：单播送到指定接口；组播送到组内所有成员，非成员不接收；任播的多个接口共享地址，由路由选择其中一个。蓝色箭头表示实际传递，灰色虚线表示未选路径。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#1765c1"/></marker>
+    <g id="host"><rect x="-23" y="-18" width="46" height="30" rx="4" fill="#fff" stroke="currentColor" stroke-width="2.5"/><path d="M0 12v8m-15 0h30" fill="none" stroke="currentColor" stroke-width="2.5"/></g>
+    <style>
+      text {font-family:'Microsoft YaHei','Noto Sans CJK SC',sans-serif;fill:#183451}
+      .heading {font-size:27px;font-weight:700}
+      .sub {font-size:20px;fill:#536c85}
+      .label {font-size:18px}
+      .small {font-size:16px;fill:#536c85}
+      .strong {font-size:21px;font-weight:700;fill:#1257a3}
+      .route {fill:none;stroke:#1765c1;stroke-width:3.5;marker-end:url(#arrow)}
+      .idle {fill:none;stroke:#c4cfda;stroke-width:2;stroke-dasharray:7 6}
+      .mono {font-family:Consolas,monospace;font-size:18px}
+    </style>
+  </defs>
+  <rect width="1440" height="760" fill="#fff"/>
+  <text x="720" y="53" text-anchor="middle" font-size="32" font-weight="700">同一个分组，最终送到谁？</text>
+  <text x="720" y="87" text-anchor="middle" class="sub">IPv6 地址的三种传递方式</text>
+
+  <g transform="translate(24 115)">
+    <rect width="448" height="548" rx="18" fill="#f4f8fd" stroke="#c8daef"/>
+    <text x="224" y="43" text-anchor="middle" class="heading">单播 · Unicast</text>
+    <text x="224" y="76" text-anchor="middle" class="sub">一个地址 → 一个指定接口</text>
+    <rect x="26" y="100" width="396" height="45" rx="9" fill="#e5effc"/>
+    <text x="224" y="129" text-anchor="middle" class="mono">目的：2001:db8::2</text>
+    <path class="idle" d="M103 283 170 283 247 205"/>
+    <path class="idle" d="M103 283 170 283 247 397"/>
+    <path class="route" d="M103 283H247"/>
+    <use href="#host" x="69" y="283" color="#1765c1"/>
+    <text x="69" y="326" text-anchor="middle" class="label">发送方</text>
+    <rect x="255" y="168" width="170" height="70" rx="10" fill="#fff" stroke="#d4dee8"/>
+    <text x="340" y="196" text-anchor="middle" class="label">接口 A</text>
+    <text x="340" y="221" text-anchor="middle" class="mono">2001:db8::1</text>
+    <rect x="255" y="253" width="170" height="70" rx="10" fill="#dfedff" stroke="#1765c1" stroke-width="2"/>
+    <text x="340" y="281" text-anchor="middle" class="label">接口 B · 接收</text>
+    <text x="340" y="306" text-anchor="middle" class="mono">2001:db8::2</text>
+    <rect x="255" y="360" width="170" height="70" rx="10" fill="#fff" stroke="#d4dee8"/>
+    <text x="340" y="388" text-anchor="middle" class="label">接口 C</text>
+    <text x="340" y="413" text-anchor="middle" class="mono">2001:db8::3</text>
+    <text x="224" y="480" text-anchor="middle" class="strong">地址明确指定 B，就交给 B</text>
+    <text x="224" y="516" text-anchor="middle" class="small">A、C 不是这个分组的目的接口</text>
+  </g>
+
+  <g transform="translate(496 115)">
+    <rect width="448" height="548" rx="18" fill="#f4f8fd" stroke="#c8daef"/>
+    <text x="224" y="43" text-anchor="middle" class="heading">组播 · Multicast</text>
+    <text x="224" y="76" text-anchor="middle" class="sub">一个组地址 → 组内所有成员</text>
+    <rect x="26" y="100" width="396" height="45" rx="9" fill="#e5effc"/>
+    <text x="224" y="129" text-anchor="middle" class="label">目的：组播组 G 的地址</text>
+    <rect x="244" y="157" width="189" height="176" rx="14" fill="#edf5ff" stroke="#8bb5e8" stroke-dasharray="5 4"/>
+    <path class="idle" d="M103 283 170 283 247 397"/>
+    <path class="route" d="M103 283H165V205H247"/>
+    <path class="route" d="M165 283H247"/>
+    <use href="#host" x="69" y="283" color="#1765c1"/>
+    <text x="69" y="326" text-anchor="middle" class="label">发送方</text>
+    <rect x="255" y="168" width="170" height="70" rx="10" fill="#dfedff" stroke="#1765c1" stroke-width="2"/>
+    <text x="340" y="196" text-anchor="middle" class="label">接口 A · 接收</text>
+    <text x="340" y="221" text-anchor="middle" class="small">组 G 成员</text>
+    <rect x="255" y="253" width="170" height="70" rx="10" fill="#dfedff" stroke="#1765c1" stroke-width="2"/>
+    <text x="340" y="281" text-anchor="middle" class="label">接口 B · 接收</text>
+    <text x="340" y="306" text-anchor="middle" class="small">组 G 成员</text>
+    <rect x="255" y="360" width="170" height="70" rx="10" fill="#fff" stroke="#d4dee8"/>
+    <text x="340" y="388" text-anchor="middle" class="label">接口 C</text>
+    <text x="340" y="413" text-anchor="middle" class="small">非成员 · 不接收</text>
+    <text x="224" y="480" text-anchor="middle" class="strong">组内 A、B 都收到一份</text>
+    <text x="224" y="516" text-anchor="middle" class="small">分发受组播作用域限制，不是广播</text>
+  </g>
+
+  <g transform="translate(968 115)">
+    <rect width="448" height="548" rx="18" fill="#f4f8fd" stroke="#c8daef"/>
+    <text x="224" y="43" text-anchor="middle" class="heading">任播 · Anycast</text>
+    <text x="224" y="76" text-anchor="middle" class="sub">一个共享地址 → 其中一个接口</text>
+    <rect x="26" y="100" width="396" height="45" rx="9" fill="#fff0df"/>
+    <text x="224" y="129" text-anchor="middle" class="label">目的：A、B、C 共用的任播地址</text>
+    <path class="idle" d="M103 283 170 283 247 205"/>
+    <path class="idle" d="M103 283 170 283 247 397"/>
+    <path class="route" d="M103 283H247"/>
+    <use href="#host" x="69" y="283" color="#1765c1"/>
+    <text x="69" y="326" text-anchor="middle" class="label">发送方</text>
+    <rect x="255" y="168" width="170" height="70" rx="10" fill="#fff" stroke="#d4dee8"/>
+    <text x="340" y="196" text-anchor="middle" class="label">接口 A</text>
+    <text x="340" y="221" text-anchor="middle" class="small">同一任播地址</text>
+    <rect x="255" y="253" width="170" height="70" rx="10" fill="#dfedff" stroke="#1765c1" stroke-width="2"/>
+    <text x="340" y="281" text-anchor="middle" class="label">接口 B · 接收</text>
+    <text x="340" y="306" text-anchor="middle" class="small">同一任播地址</text>
+    <rect x="255" y="360" width="170" height="70" rx="10" fill="#fff" stroke="#d4dee8"/>
+    <text x="340" y="388" text-anchor="middle" class="label">接口 C</text>
+    <text x="340" y="413" text-anchor="middle" class="small">同一任播地址</text>
+    <text x="224" y="480" text-anchor="middle" class="strong">假设当前路由选择 B，只送到 B</text>
+    <text x="224" y="516" text-anchor="middle" class="small">“最近”取决于路由，并非地理距离</text>
+  </g>
+  <path d="M42 698h44" class="route"/><text x="104" y="704" class="small">实际传递</text>
+  <path d="M260 698h44" class="idle"/><text x="322" y="704" class="small">未选路径</text>
+  <text x="42" y="738" class="small">示意图省略中间路由设备；箭头表示正常转发条件下的交付目标。</text>
+</svg>

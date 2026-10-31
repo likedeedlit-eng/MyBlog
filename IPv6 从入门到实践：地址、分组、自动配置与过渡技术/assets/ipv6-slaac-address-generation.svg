@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080" role="img" aria-labelledby="title desc">
+  <title id="title">SLAAC 地址生成过程</title>
+  <desc id="desc">路由器通过路由器通告发布可用于 SLAAC 的 IPv6 前缀，主机生成接口标识，拼接出暂定全局地址，经过重复地址检测后启用地址。</desc>
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L11 6L1 11Z" fill="#2168b7"/></marker>
+    <marker id="arrow-green" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L11 6L1 11Z" fill="#2d9054"/></marker>
+    <marker id="arrow-red" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L11 6L1 11Z" fill="#cd4848"/></marker>
+    <style>
+      text { font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; fill: #183958; }
+      .title { font-size: 35px; font-weight: 700; }
+      .subtitle { font-size: 20px; fill: #58738e; }
+      .stage { font-size: 25px; font-weight: 700; fill: #185da7; }
+      .heading { font-size: 22px; font-weight: 700; }
+      .body { font-size: 19px; }
+      .small { font-size: 17px; fill: #55708a; }
+      .tiny { font-size: 15px; fill: #55708a; }
+      .code { font-family: Consolas, "Microsoft YaHei", monospace; font-size: 20px; }
+      .code-small { font-family: Consolas, "Microsoft YaHei", monospace; font-size: 17px; }
+      .panel { fill: #f6f9fd; stroke: #c5d9ef; stroke-width: 2; }
+      .card { fill: #ffffff; stroke: #9dbddd; stroke-width: 2; }
+      .blue-card { fill: #eaf3ff; stroke: #2168b7; stroke-width: 2.5; }
+      .orange-card { fill: #fff3e4; stroke: #dd7d22; stroke-width: 2.5; }
+      .green-card { fill: #edf8f0; stroke: #2d9054; stroke-width: 2.5; }
+      .purple-card { fill: #f3eeff; stroke: #7657bd; stroke-width: 2.5; }
+      .red-card { fill: #fff0f0; stroke: #cd4848; stroke-width: 2.5; }
+      .blue-line { fill: none; stroke: #2168b7; stroke-width: 4; marker-end: url(#arrow-blue); }
+      .green-line { fill: none; stroke: #2d9054; stroke-width: 4; marker-end: url(#arrow-green); }
+      .red-line { fill: none; stroke: #cd4848; stroke-width: 4; marker-end: url(#arrow-red); }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1080" fill="#ffffff"/>
+  <text x="800" y="58" text-anchor="middle" class="title">SLAAC：路由器给前缀，主机自己生成完整 IPv6 地址</text>
+  <text x="800" y="94" text-anchor="middle" class="subtitle">路由器不逐台分配完整地址；新地址还要通过 DAD，才能真正投入使用</text>
+
+  <!-- Step 1 -->
+  <g transform="translate(50 140)">
+    <rect width="455" height="455" rx="18" class="panel"/>
+    <text x="35" y="48" class="stage">① RA 发布网络前缀</text>
+    <text x="35" y="78" class="small">路由器告诉主机：这个网络属于哪一段</text>
+    <rect x="48" y="113" width="359" height="104" rx="14" class="card"/>
+    <text x="82" y="151" class="heading">IPv6 路由器</text>
+    <text x="82" y="185" class="code-small">fe80::1</text>
+    <circle cx="359" cy="163" r="23" fill="#2168b7"/>
+    <path d="M342 163h34M359 146v34M345 152l14-6 14 6M345 174l14 6 14-6" fill="none" stroke="#fff" stroke-width="3"/>
+    <rect x="48" y="250" width="359" height="119" rx="14" class="blue-card"/>
+    <text x="77" y="286" class="heading">RA 中的 Prefix Information</text>
+    <text x="77" y="322" class="code">2001:db8:1234:5678::/64</text>
+    <rect x="122" y="391" width="211" height="43" rx="18" class="green-card"/>
+    <text x="228" y="419" text-anchor="middle" class="small" fill="#246f42">A = 1：允许使用 SLAAC</text>
+  </g>
+
+  <path d="M515 367H620" class="blue-line"/>
+  <text x="567" y="342" text-anchor="middle" class="small">RA</text>
+
+  <!-- Step 2 -->
+  <g transform="translate(640 140)">
+    <rect width="405" height="455" rx="18" class="panel"/>
+    <text x="33" y="48" class="stage">② 主机生成接口标识</text>
+    <text x="33" y="78" class="small">主机自己决定地址的后半部分</text>
+    <rect x="48" y="113" width="309" height="104" rx="14" class="card"/>
+    <text x="78" y="151" class="heading">笔记本</text>
+    <text x="78" y="185" class="small">本地算法生成后 64 位</text>
+    <rect x="48" y="254" width="309" height="115" rx="14" class="orange-card"/>
+    <text x="75" y="292" class="heading">Interface Identifier</text>
+    <text x="75" y="328" class="code">abcd:1234:5678:90ef</text>
+    <text x="202" y="414" text-anchor="middle" class="tiny">可采用隐私算法、随机化或其他本地策略</text>
+  </g>
+
+  <path d="M1055 367H1160" class="blue-line"/>
+  <text x="1107" y="342" text-anchor="middle" class="small">拼接</text>
+
+  <!-- Step 3 -->
+  <g transform="translate(1180 140)">
+    <rect width="370" height="455" rx="18" class="panel"/>
+    <text x="31" y="48" class="stage">③ 形成暂定地址</text>
+    <text x="31" y="78" class="small">前缀与接口标识合成一个地址</text>
+    <rect x="30" y="118" width="310" height="106" rx="14" class="green-card"/>
+    <text x="185" y="159" text-anchor="middle" class="code-small">2001:db8:1234:5678:</text>
+    <text x="185" y="190" text-anchor="middle" class="code-small">abcd:1234:5678:90ef</text>
+    <rect x="30" y="266" width="140" height="77" rx="12" class="blue-card"/>
+    <text x="100" y="296" text-anchor="middle" class="body">网络前缀</text>
+    <text x="100" y="322" text-anchor="middle" class="small">64 bit</text>
+    <text x="185" y="315" text-anchor="middle" class="heading">+</text>
+    <rect x="200" y="266" width="140" height="77" rx="12" class="orange-card"/>
+    <text x="270" y="296" text-anchor="middle" class="body">接口标识</text>
+    <text x="270" y="322" text-anchor="middle" class="small">64 bit</text>
+    <rect x="68" y="383" width="234" height="42" rx="18" class="purple-card"/>
+    <text x="185" y="411" text-anchor="middle" class="small">状态：暂定，尚不能通信</text>
+  </g>
+
+  <!-- Step 4 -->
+  <g transform="translate(50 655)">
+    <rect width="1500" height="286" rx="20" class="panel"/>
+    <text x="38" y="51" class="stage">④ DAD：确认地址没有被其他设备使用</text>
+    <text x="38" y="81" class="small">主机用 NS 询问局域网；只有确认没有冲突，暂定地址才会转为可用地址</text>
+
+    <rect x="55" y="119" width="265" height="113" rx="14" class="purple-card"/>
+    <text x="83" y="156" class="heading">暂定全局地址</text>
+    <text x="83" y="190" class="code-small">2001:db8:1234:5678:…</text>
+    <text x="83" y="215" class="tiny">不能作为普通通信源地址</text>
+
+    <path d="M335 176H495" class="blue-line"/>
+    <rect x="520" y="119" width="310" height="113" rx="14" class="card"/>
+    <text x="550" y="156" class="heading">NS 查询</text>
+    <text x="550" y="190" class="body">“这个地址有人在使用吗？”</text>
+    <text x="550" y="215" class="tiny">DAD 使用邻居请求报文</text>
+
+    <path d="M845 176H980" class="green-line"/>
+    <path d="M845 176C905 176 910 240 980 240" class="red-line"/>
+    <rect x="1005" y="107" width="268" height="88" rx="14" class="green-card"/>
+    <text x="1035" y="145" class="heading">没有冲突</text>
+    <text x="1035" y="178" class="body">地址正式启用</text>
+    <rect x="1005" y="215" width="268" height="65" rx="14" class="red-card"/>
+    <text x="1035" y="242" class="heading">发现冲突</text>
+    <text x="1035" y="267" class="small">放弃或重新生成标识</text>
+
+    <path d="M1288 160H1360" class="green-line"/>
+    <rect x="1380" y="107" width="85" height="166" rx="14" class="blue-card"/>
+    <text x="1422" y="148" text-anchor="middle" class="heading">结果</text>
+    <text x="1422" y="184" text-anchor="middle" class="small">可作为</text>
+    <text x="1422" y="209" text-anchor="middle" class="small">源地址</text>
+    <text x="1422" y="234" text-anchor="middle" class="small">配合 RA</text>
+    <text x="1422" y="257" text-anchor="middle" class="small">访问网络</text>
+  </g>
+
+  <g transform="translate(170 981)">
+    <rect width="1260" height="57" rx="16" fill="#edf5ff" stroke="#a9c8e5" stroke-width="2"/>
+    <text x="630" y="35" text-anchor="middle" class="body">一句话记忆：SLAAC 不是“路由器给完整地址”，而是“路由器给前缀，主机自己补接口标识”。</text>
+  </g>
+</svg>

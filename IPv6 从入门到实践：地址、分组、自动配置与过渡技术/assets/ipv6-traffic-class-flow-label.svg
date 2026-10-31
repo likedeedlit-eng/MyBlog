@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980" role="img" aria-labelledby="title desc">
+  <title id="title">Traffic Class 与 Flow Label 的分工及流标签的作用过程</title>
+  <desc id="desc">三条业务流各自产生多个分组。同一条流的分组使用相同 Flow Label。路由器依据 Traffic Class 选择处理队列，并结合源地址、目的地址与 Flow Label 识别具体流，通过哈希把同一流稳定映射到同一路径，从而减少乱序。</desc>
+  <defs>
+    <marker id="blueArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#2369b5"/></marker>
+    <marker id="purpleArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#7157b7"/></marker>
+    <marker id="orangeArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#dd7b23"/></marker>
+    <style>
+      text { font-family:"Microsoft YaHei","Noto Sans CJK SC",sans-serif; fill:#183451; }
+      .title { font-size:32px; font-weight:700; }
+      .subtitle { font-size:18px; fill:#587087; }
+      .stage { font-size:23px; font-weight:700; fill:#15579f; }
+      .heading { font-size:19px; font-weight:700; }
+      .label { font-size:17px; }
+      .small { font-size:15px; fill:#567087; }
+      .tiny { font-size:14px; fill:#567087; }
+      .code { font-family:Consolas,"Microsoft YaHei",monospace; font-size:15px; }
+      .panel { fill:#f6f9fd; stroke:#c5d9ee; stroke-width:1.5; }
+      .white { fill:#fff; stroke:#9ebbd9; stroke-width:1.7; }
+      .voiceA { fill:#e8f3ff; stroke:#377fc7; stroke-width:2; }
+      .voiceB { fill:#f0ecff; stroke:#7157b7; stroke-width:2; }
+      .download { fill:#fff3e5; stroke:#dd7b23; stroke-width:2; }
+      .queueVoice { fill:#e4f1ff; stroke:#377fc7; stroke-width:2; }
+      .queueNormal { fill:#fff1df; stroke:#dd7b23; stroke-width:2; }
+      .blueLine { fill:none; stroke:#2369b5; stroke-width:3; marker-end:url(#blueArrow); }
+      .purpleLine { fill:none; stroke:#7157b7; stroke-width:3; marker-end:url(#purpleArrow); }
+      .orangeLine { fill:none; stroke:#dd7b23; stroke-width:3; marker-end:url(#orangeArrow); }
+    </style>
+  </defs>
+  <rect width="1600" height="980" fill="#fff"/>
+  <text x="800" y="48" text-anchor="middle" class="title">Flow Label 如何让路由器识别并稳定转发“同一条流”</text>
+  <text x="800" y="80" text-anchor="middle" class="subtitle">Traffic Class 回答“怎样处理”，Flow Label 回答“这是哪一条流”</text>
+
+  <g transform="translate(32 112)">
+    <rect width="470" height="690" rx="18" class="panel"/>
+    <text x="235" y="42" text-anchor="middle" class="stage">① 源主机：连续产生多条流</text>
+    <rect x="38" y="67" width="394" height="58" rx="10" class="white"/>
+    <text x="235" y="91" text-anchor="middle" class="code">Source：2001:db8:1::10</text>
+    <text x="235" y="114" text-anchor="middle" class="code">Destination：2001:db8:2::20</text>
+
+    <text x="34" y="157" class="heading">语音流 A</text>
+    <text x="436" y="157" text-anchor="end" class="small">相同类别，相同流标签</text>
+    <g transform="translate(34 170)">
+      <rect width="118" height="92" rx="10" class="voiceA"/><text x="59" y="28" text-anchor="middle" class="label" font-weight="700">分组 A1</text><text x="59" y="53" text-anchor="middle" class="tiny">TC：语音</text><text x="59" y="76" text-anchor="middle" class="code">FL：12345</text>
+      <rect x="142" width="118" height="92" rx="10" class="voiceA"/><text x="201" y="28" text-anchor="middle" class="label" font-weight="700">分组 A2</text><text x="201" y="53" text-anchor="middle" class="tiny">TC：语音</text><text x="201" y="76" text-anchor="middle" class="code">FL：12345</text>
+      <rect x="284" width="118" height="92" rx="10" class="voiceA"/><text x="343" y="28" text-anchor="middle" class="label" font-weight="700">分组 A3</text><text x="343" y="53" text-anchor="middle" class="tiny">TC：语音</text><text x="343" y="76" text-anchor="middle" class="code">FL：12345</text>
+    </g>
+
+    <text x="34" y="305" class="heading">语音流 B</text>
+    <text x="436" y="305" text-anchor="end" class="small">类别与 A 相同，流标签不同</text>
+    <g transform="translate(34 318)">
+      <rect width="118" height="92" rx="10" class="voiceB"/><text x="59" y="28" text-anchor="middle" class="label" font-weight="700">分组 B1</text><text x="59" y="53" text-anchor="middle" class="tiny">TC：语音</text><text x="59" y="76" text-anchor="middle" class="code">FL：23456</text>
+      <rect x="142" width="118" height="92" rx="10" class="voiceB"/><text x="201" y="28" text-anchor="middle" class="label" font-weight="700">分组 B2</text><text x="201" y="53" text-anchor="middle" class="tiny">TC：语音</text><text x="201" y="76" text-anchor="middle" class="code">FL：23456</text>
+      <rect x="284" width="118" height="92" rx="10" class="voiceB"/><text x="343" y="28" text-anchor="middle" class="label" font-weight="700">分组 B3</text><text x="343" y="53" text-anchor="middle" class="tiny">TC：语音</text><text x="343" y="76" text-anchor="middle" class="code">FL：23456</text>
+    </g>
+
+    <text x="34" y="453" class="heading">文件下载流</text>
+    <text x="436" y="453" text-anchor="end" class="small">类别和流标签都不同</text>
+    <g transform="translate(34 466)">
+      <rect width="118" height="92" rx="10" class="download"/><text x="59" y="28" text-anchor="middle" class="label" font-weight="700">分组 D1</text><text x="59" y="53" text-anchor="middle" class="tiny">TC：普通</text><text x="59" y="76" text-anchor="middle" class="code">FL：67890</text>
+      <rect x="142" width="118" height="92" rx="10" class="download"/><text x="201" y="28" text-anchor="middle" class="label" font-weight="700">分组 D2</text><text x="201" y="53" text-anchor="middle" class="tiny">TC：普通</text><text x="201" y="76" text-anchor="middle" class="code">FL：67890</text>
+      <rect x="284" width="118" height="92" rx="10" class="download"/><text x="343" y="28" text-anchor="middle" class="label" font-weight="700">分组 D3</text><text x="343" y="53" text-anchor="middle" class="tiny">TC：普通</text><text x="343" y="76" text-anchor="middle" class="code">FL：67890</text>
+    </g>
+    <rect x="34" y="594" width="402" height="65" rx="10" fill="#edf5ff" stroke="#8fb7df"/>
+    <text x="235" y="616" text-anchor="middle" class="label" font-weight="700">同一条流的后续分组</text>
+    <text x="235" y="639" text-anchor="middle" class="label" font-weight="700">保持同一个 Flow Label</text>
+    <text x="235" y="657" text-anchor="middle" class="tiny">标签由源端填写；0 表示该分组没有被标记</text>
+  </g>
+
+  <g transform="translate(555 112)">
+    <rect width="500" height="690" rx="18" class="panel"/>
+    <text x="250" y="42" text-anchor="middle" class="stage">② 路由器：两个字段完成两种任务</text>
+    <rect x="33" y="72" width="434" height="157" rx="14" class="white"/>
+    <text x="250" y="102" text-anchor="middle" class="heading">任务 A：Traffic Class 选择处理队列</text>
+    <rect x="58" y="124" width="180" height="72" rx="10" class="queueVoice"/><text x="148" y="153" text-anchor="middle" class="label" font-weight="700">低延迟队列</text><text x="148" y="179" text-anchor="middle" class="small">语音流 A + 语音流 B</text>
+    <rect x="262" y="124" width="180" height="72" rx="10" class="queueNormal"/><text x="352" y="153" text-anchor="middle" class="label" font-weight="700">普通队列</text><text x="352" y="179" text-anchor="middle" class="small">文件下载流</text>
+
+    <rect x="33" y="255" width="434" height="291" rx="14" class="white"/>
+    <text x="250" y="287" text-anchor="middle" class="heading">任务 B：Flow Label 帮助建立“流标识”</text>
+    <text x="250" y="320" text-anchor="middle" class="small">三个字段都位于固定的 IPv6 基本首部中</text>
+    <g transform="translate(53 343)">
+      <rect width="120" height="54" rx="9" fill="#e8f3ff" stroke="#377fc7"/><text x="60" y="23" text-anchor="middle" class="tiny">源地址</text><text x="60" y="43" text-anchor="middle" class="code">Source</text>
+      <text x="135" y="34" text-anchor="middle" class="heading">+</text>
+      <rect x="150" width="120" height="54" rx="9" fill="#e8f3ff" stroke="#377fc7"/><text x="210" y="23" text-anchor="middle" class="tiny">目的地址</text><text x="210" y="43" text-anchor="middle" class="code">Destination</text>
+      <text x="285" y="34" text-anchor="middle" class="heading">+</text>
+      <rect x="300" width="114" height="54" rx="9" fill="#f0ecff" stroke="#7157b7"/><text x="357" y="23" text-anchor="middle" class="tiny">流标签</text><text x="357" y="43" text-anchor="middle" class="code">Flow Label</text>
+    </g>
+    <path d="M250 405v35" class="blueLine"/>
+    <rect x="93" y="440" width="314" height="76" rx="11" fill="#edf5ff" stroke="#7faad5" stroke-width="2"/>
+    <text x="250" y="468" text-anchor="middle" class="label" font-weight="700">对流标识进行哈希计算</text>
+    <text x="250" y="495" text-anchor="middle" class="small">同一组输入 → 相同结果 → 相同路径</text>
+
+    <rect x="33" y="565" width="434" height="108" rx="12" fill="#f3f0ff" stroke="#a895d5"/>
+    <text x="250" y="601" text-anchor="middle" class="label" font-weight="700">为什么不总是读取 TCP / UDP 端口？</text>
+    <text x="250" y="622" text-anchor="middle" class="small">端口可能位于扩展首部之后，</text>
+    <text x="250" y="644" text-anchor="middle" class="small">非首片中还可能没有端口</text>
+    <text x="250" y="666" text-anchor="middle" class="small">Flow Label 位于基本首部固定位置，更容易读取</text>
+  </g>
+
+  <g transform="translate(1108 112)">
+    <rect width="460" height="690" rx="18" class="panel"/>
+    <text x="230" y="42" text-anchor="middle" class="stage">③ 网络：同一条流保持稳定路径</text>
+    <circle cx="70" cy="345" r="43" fill="#1765b4"/>
+    <path d="M45 345h50M70 320v50M50 327l20-7 20 7M50 363l20 7 20-7" fill="none" stroke="#fff" stroke-width="4"/>
+    <text x="70" y="405" text-anchor="middle" class="small">入口路由器</text>
+
+    <path d="M113 260C205 175 278 175 370 250" class="blueLine"/>
+    <path d="M113 345H370" class="purpleLine"/>
+    <path d="M113 430C205 515 278 515 370 440" class="orangeLine"/>
+    <g transform="translate(175 160)">
+      <rect width="56" height="35" rx="7" class="voiceA"/><text x="28" y="23" text-anchor="middle" class="tiny">A1</text>
+      <rect x="64" width="56" height="35" rx="7" class="voiceA"/><text x="92" y="23" text-anchor="middle" class="tiny">A2</text>
+      <rect x="128" width="56" height="35" rx="7" class="voiceA"/><text x="156" y="23" text-anchor="middle" class="tiny">A3</text>
+    </g>
+    <text x="267" y="220" text-anchor="middle" class="code">FL 12345 → 路径 P1</text>
+    <g transform="translate(175 288)">
+      <rect width="56" height="35" rx="7" class="voiceB"/><text x="28" y="23" text-anchor="middle" class="tiny">B1</text>
+      <rect x="64" width="56" height="35" rx="7" class="voiceB"/><text x="92" y="23" text-anchor="middle" class="tiny">B2</text>
+      <rect x="128" width="56" height="35" rx="7" class="voiceB"/><text x="156" y="23" text-anchor="middle" class="tiny">B3</text>
+    </g>
+    <text x="267" y="376" text-anchor="middle" class="code">FL 23456 → 路径 P2</text>
+    <g transform="translate(175 480)">
+      <rect width="56" height="35" rx="7" class="download"/><text x="28" y="23" text-anchor="middle" class="tiny">D1</text>
+      <rect x="64" width="56" height="35" rx="7" class="download"/><text x="92" y="23" text-anchor="middle" class="tiny">D2</text>
+      <rect x="128" width="56" height="35" rx="7" class="download"/><text x="156" y="23" text-anchor="middle" class="tiny">D3</text>
+    </g>
+    <text x="267" y="546" text-anchor="middle" class="code">FL 67890 → 路径 P3</text>
+    <rect x="35" y="578" width="390" height="81" rx="12" fill="#eaf7ef" stroke="#67a77f" stroke-width="2"/>
+    <text x="230" y="608" text-anchor="middle" class="label" font-weight="700">结果：每条流内部的分组沿同一路径前进</text>
+    <text x="230" y="635" text-anchor="middle" class="small">减少因多路径时延不同造成的分组乱序</text>
+  </g>
+
+  <path d="M502 455h45" class="blueLine"/>
+  <path d="M1055 455h45" class="blueLine"/>
+
+  <g transform="translate(87 842)">
+    <rect width="1426" height="94" rx="16" fill="#eef5fc" stroke="#bfd5eb"/>
+    <text x="713" y="27" text-anchor="middle" class="heading">Flow Label 的作用链</text>
+    <text x="142" y="65" text-anchor="middle" class="label">同一流使用相同标签</text>
+    <path d="M247 60h82" class="blueLine"/>
+    <text x="454" y="65" text-anchor="middle" class="label">固定位置快速读取</text>
+    <path d="M559 60h82" class="blueLine"/>
+    <text x="766" y="65" text-anchor="middle" class="label">稳定得到同一哈希结果</text>
+    <path d="M889 60h82" class="blueLine"/>
+    <text x="1092" y="65" text-anchor="middle" class="label">选择同一路径</text>
+    <path d="M1187 60h82" class="blueLine"/>
+    <text x="1350" y="65" text-anchor="middle" class="label">降低乱序概率</text>
+  </g>
+  <text x="800" y="966" text-anchor="middle" class="small">Flow Label 便于识别流，但不承诺优先级、带宽或固定的物理路径；实际使用取决于设备和网络策略。</text>
+</svg>
